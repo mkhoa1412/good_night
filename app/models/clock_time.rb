@@ -15,15 +15,28 @@ class ClockTime
               end
   end
 
+  def to_time
+    value
+  end
+
   def to_s
     value.strftime(TIME_FORMAT)
   end
 
   def ==(other)
-    value.to_s == other.to_s
+    value.to_time == other.to_time
+  end
+
+  def <(other)
+    value.to_time < other.to_time
+  end
+
+  def >(other)
+    value.to_time > other.to_time
   end
 
   def -(other)
-    hour - other.hour
+    hours = (to_time - other.to_time).to_i
+    hours.zero? ? hours : hours / 3600
   end
 end

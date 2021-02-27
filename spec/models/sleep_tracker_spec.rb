@@ -4,8 +4,8 @@ RSpec.describe SleepTracker, type: :model do
   TIME_FORMAT = '%FT%T%:z'
 
   it "is valid with clocked_in and clocked_out" do
-    time_in = Time.new('2021-02-27 11:00:00')
-    time_out = Time.new('2021-02-28 06:00:00')
+    time_in = '2021-02-27 11:00:00'
+    time_out = '2021-02-28 06:00:00'
     it = build_stubbed(:sleep_tracker,  clocked_in: time_in, clocked_out: time_out)
     expect(it).to be_valid
   end
@@ -16,6 +16,15 @@ RSpec.describe SleepTracker, type: :model do
     expect(it).to be_valid 
     expect(it.clocked_in).to be_present
   end
+
+  it "is invalid when clocked_in greater than clocked_out" do
+    time_in = '2021-02-27 11:00:00'
+    time_out = '2021-02-27 06:00:00'
+    it = build_stubbed(:sleep_tracker,  clocked_in: time_in, clocked_out: time_out)
+    it.valid?
+    expect(it.errors).to have_key(:clocked_out)
+  end
+
 
   it "return right time wit full string time format" do
     time = '2021-02-27 11:00:00'
@@ -36,7 +45,8 @@ RSpec.describe SleepTracker, type: :model do
 
   it "is sleeping time in hours with clocked_out"  do
     time = Time.current
-    it = build_stubbed(:sleep_tracker, clocked_in: time, clocked_out: time + 8.hours)
-    expect(it.sleeping_time).to eq('8 hours')
+    interval = rand(24)
+    it = build_stubbed(:sleep_tracker, clocked_in: time, clocked_out: time + interval.hours)
+    expect(it.sleeping_time).to eq("#{interval} hours")
   end  
 end
