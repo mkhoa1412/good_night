@@ -1,6 +1,7 @@
 class ClockTime
+  TIME_FORMAT = '%FT%T%:z'.freeze
+  TIME_COMPONENTS = %i[hours minutes].freeze
 
-  TIME_FORMAT = '%FT%T%:z'
   extend Forwardable
   attr_reader :value
 
@@ -8,11 +9,11 @@ class ClockTime
 
   def initialize(value)
     @value = case value
-              when Time
-                value
-              else
-                Time.parse(value.to_s)
-              end
+             when Time
+               value
+             else
+               Time.parse(value.to_s)
+             end
   end
 
   def to_time
@@ -36,7 +37,12 @@ class ClockTime
   end
 
   def -(other)
-    hours = (to_time - other.to_time).to_i
-    hours.zero? ? hours : hours / 3600
+    seconds_diff = (to_time - other.to_time).to_i.abs
+    hours = seconds_diff / 3600
+    seconds_diff -= hours * 3600
+    minutes = seconds_diff / 60
+    seconds_diff -= minutes * 60
+    seconds = seconds_diff
+    "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}"
   end
 end

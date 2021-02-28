@@ -1,23 +1,20 @@
 class SleepTracker < ApplicationRecord
-  attribute :clocked_in, :clock_time, default: -> {Time.current}
+  ZERO_TIME = '00:00:00'.freeze
+
+  attribute :clocked_in, :clock_time, default: -> { Time.current }
   attribute :clocked_out, :clock_time
 
   validate :clocked_in_cannot_be_greater_than_clocked_out
 
   def sleeping_time
-    duration =  if clocked_out.blank? ||  clocked_out == clocked_in
-      0
-    else
-      clocked_out - clocked_in
-    end
-    "#{duration} hours"
+    return ZERO_TIME if clocked_out.nil? || clocked_out == clocked_in
+
+    clocked_out - clocked_in
   end
 
-  private 
+  private
 
   def clocked_in_cannot_be_greater_than_clocked_out
-    if clocked_out.present? && clocked_in > clocked_out
-      errors.add(:clocked_out, "can't be in the past")
-    end
+    errors.add(:clocked_out, "can't be in the past") if clocked_out.present? && clocked_in > clocked_out
   end
 end
