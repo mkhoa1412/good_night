@@ -5,5 +5,9 @@ Rails.application.routes.draw do
   scope module: :v1 do
     resources :sleep_trackers, only: [:index] do
     end
+
+    resources :users, only: [] do
+      get :fetch_all_clocked_in
+    end
   end
 end

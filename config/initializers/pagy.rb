@@ -3,6 +3,8 @@
 # you must require the shared internal extra (BEFORE the metadata extra) ONLY if you need also the :sequels
 # require 'pagy/extras/shared'
 require 'pagy/extras/metadata'
+require 'pagy/extras/array'
+
 # For performance reason, you should explicitly set ONLY the metadata you use in the frontend
 Pagy::VARS[:metadata] = %i[count page prev next last from] # example
 

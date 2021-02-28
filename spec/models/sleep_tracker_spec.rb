@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe SleepTracker, type: :model do
-  TIME_FORMAT = '%FT%T%:z'.freeze
-
   it 'is valid with clocked_in and clocked_out' do
     time_in = '2021-02-27 11:00:00'
     time_out = '2021-02-28 06:00:00'
@@ -28,13 +26,13 @@ RSpec.describe SleepTracker, type: :model do
   it 'return right time wit full string time format' do
     time = '2021-02-27 11:00:00'
     it = build_stubbed(:sleep_tracker, clocked_in: time)
-    expect(it.clocked_in.to_s).to eq(Time.parse(time).strftime(TIME_FORMAT))
+    expect(it.clocked_in.to_s).to eq(Time.parse(time).strftime(ClockTime::TIME_FORMAT))
   end
 
   it 'return right time wit short string time format' do
     time = '11:00'
     it = build_stubbed(:sleep_tracker, clocked_in: time)
-    expect(it.clocked_in.to_s).to eq(Time.parse(time).strftime(TIME_FORMAT))
+    expect(it.clocked_in.to_s).to eq(Time.parse(time).strftime(ClockTime::TIME_FORMAT))
   end
 
   it 'return sleeping time is 0 without clocked_out' do
