@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 
     resources :users, only: [] do
       get :fetch_all_clocked_in
+      put :follow
+      put :unfollow
     end
   end
 end

@@ -26,6 +26,38 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: followships; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.followships (
+    id bigint NOT NULL,
+    follower_id integer,
+    followee_id integer,
+    created_at timestamp(6) with time zone NOT NULL,
+    updated_at timestamp(6) with time zone NOT NULL
+);
+
+
+--
+-- Name: followships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.followships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: followships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.followships_id_seq OWNED BY public.followships.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -99,6 +131,13 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: followships id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.followships ALTER COLUMN id SET DEFAULT nextval('public.followships_id_seq'::regclass);
+
+
+--
 -- Name: sleep_trackers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -118,6 +157,14 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: followships followships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.followships
+    ADD CONSTRAINT followships_pkey PRIMARY KEY (id);
 
 
 --
@@ -145,6 +192,27 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: index_followships_on_followee_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_followships_on_followee_id ON public.followships USING btree (followee_id);
+
+
+--
+-- Name: index_followships_on_follower_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_followships_on_follower_id ON public.followships USING btree (follower_id);
+
+
+--
+-- Name: index_followships_on_follower_id_and_followee_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_followships_on_follower_id_and_followee_id ON public.followships USING btree (follower_id, followee_id);
+
+
+--
 -- Name: index_sleep_trackers_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -168,6 +236,7 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20210227104028'),
 ('20210228052731'),
-('20210228052822');
+('20210228052822'),
+('20210228062156');
 
 

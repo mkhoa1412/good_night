@@ -4,9 +4,14 @@ module Response
     render json: resource, status: status
   end
 
-  def error_response(resource, status = :bad_request)
+  def error_response(resource = { error: 'failed' }, status = :bad_request)
+    error = if resource.respond_to?(:errors)
+              resource.errors.full_messages.to_sentence
+            else
+              resource[:error]
+            end
     render json: {
-      error: resource.errors.full_messages.to_sentence
+      error: error
     }, status: status
   end
 
