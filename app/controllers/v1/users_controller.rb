@@ -28,6 +28,12 @@ module V1
       end
     end
 
+    def sleep_records_last_week_of_followees
+      @user = find_user
+      @pagy, @data = pagy_array(@user.sleep_records_last_week_of_followees)
+      success_response({ data: @data, meta: { pagy: pagy_metadata(@pagy) } }, :ok)
+    end
+
     private
 
     def find_user

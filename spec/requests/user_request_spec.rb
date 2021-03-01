@@ -123,4 +123,22 @@ RSpec.describe User, type: :request do
       end
     end
   end
+
+  describe 'GET /users/{id}/sleep_records_last_week_of_followees' do
+    before do
+      @last_week = 7.days.ago
+      @user2 = create(:user)
+      @user2.add_sleeping_tracked(create(:sleep_tracker, clocked_in: @last_week, clocked_out: @last_week + 8.hour))
+      @user.follow(@user2)
+      get "/users/#{@user.id}/sleep_records_last_week_of_followees"
+    end
+
+    it 'returns http success' do
+      expect(response).to have_http_status(:success)
+    end
+    it 'JSON body response contains expected recipe attributes' do
+      json = JSON.parse(response.body).deep_symbolize_keys
+      expect(json[:data].size).to eq(1)
+    end
+  end
 end

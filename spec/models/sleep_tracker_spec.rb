@@ -35,16 +35,16 @@ RSpec.describe SleepTracker, type: :model do
     expect(it.clocked_in.to_s).to eq(Time.parse(time).strftime(ClockTime::TIME_FORMAT))
   end
 
-  it 'return sleeping time is 0 without clocked_out' do
+  it 'display sleeping time as string without clocked_out' do
     it = build_stubbed(:sleep_tracker, clocked_in: Time.current)
-    expect(it.sleeping_time).to eq('00:00:00')
+    expect(it.sleeping_time_str).to eq('00:00:00')
   end
 
-  it 'is sleeping time in hours with clocked_out' do
+  it 'display sleeping time as string with clocked_out' do
     time = Time.current
     h_interval = rand(24)
     m_interval = rand(60)
-    it = build_stubbed(:sleep_tracker, clocked_in: time, clocked_out: time + h_interval.hours + m_interval.minutes)
-    expect(it.sleeping_time).to eq("#{h_interval.to_s.rjust(2, '0')}:#{m_interval.to_s.rjust(2, '0')}:00")
+    it = create(:sleep_tracker, clocked_in: time, clocked_out: time + h_interval.hours + m_interval.minutes)
+    expect(it.sleeping_time_str).to eq(format('%02d:%02d:%02d', h_interval, m_interval, 0))
   end
 end

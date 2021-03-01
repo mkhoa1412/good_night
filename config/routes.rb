@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       get :fetch_all_clocked_in
       put :follow
       put :unfollow
+      get :sleep_records_last_week_of_followees
     end
   end
 end

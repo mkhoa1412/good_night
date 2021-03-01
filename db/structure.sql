@@ -76,7 +76,8 @@ CREATE TABLE public.sleep_trackers (
     clocked_out text,
     created_at timestamp(6) with time zone NOT NULL,
     updated_at timestamp(6) with time zone NOT NULL,
-    user_id bigint
+    user_id bigint,
+    sleeping_time integer DEFAULT 0
 );
 
 
@@ -237,6 +238,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210227104028'),
 ('20210228052731'),
 ('20210228052822'),
-('20210228062156');
+('20210228062156'),
+('20210301151010');
 
 

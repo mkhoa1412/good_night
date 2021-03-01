@@ -26,6 +26,10 @@ class User < ApplicationRecord
   end
 
   def unfollow(followed_user)
-    followees.delete followed_user
+    followees.delete(followed_user)
+  end
+
+  def sleep_records_last_week_of_followees
+    SleepTracker.last_week_of(followees).map(&:sleeping_time_str)
   end
 end
