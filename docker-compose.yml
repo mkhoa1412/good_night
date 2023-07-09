@@ -1,0 +1,93 @@
+version: '2.7'
+
+services:
+  app:
+    &app
+    platform: linux/x86_64
+    build:
+      context: .dockerdev
+      dockerfile: Dockerfile
+      args:
+        RUBY_VERSION: '2.7.5'
+        PG_MAJOR: '12'
+        BUNDLER_VERSION: '2.0.2'
+    image: good_night:1.0.0
+    tmpfs:
+      - /tmp
+
+  backend:
+    &backend
+    <<: *app
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app:cached
+      - rails_cache:/app/tmp/cache
+      - bundle:/usr/local/bundle
+      - packs:/app/public/packs
+      - .dockerdev/.psqlrc:/root/.psqlrc:ro
+    env_file: '.env'
+    environment:
+      - RAILS_ENV=${RAILS_ENV:-development}
+      - MALLOC_ARENA_MAX=${MALLOC_ARENA_MAX:-2}
+      - WEB_CONCURRENCY=${WEB_CONCURRENCY:-2}
+      - BOOTSNAP_CACHE_DIR=/usr/local/bundle/_bootsnap
+      - HISTFILE=/app/pg_log/.bash_history
+      - PSQL_HISTFILE=/app/pg_log/.psql_history
+      - EDITOR=vi
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  runner:
+    <<: *backend
+    command: /bin/bash
+
+  rails:
+    <<: *backend
+    restart: always
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    ports:
+      - '3000:3000'
+
+  sidekiq:
+    <<: *backend
+    restart: always
+    command: bundle exec sidekiq -C config/sidekiq.yml
+
+  postgres:
+    image: postgres:12.1
+    restart: always
+    volumes:
+      - .psqlrc:/root/.psqlrc:ro
+      - postgres:/var/lib/postgresql/data
+      - ./pg_log:/root/pg_log:cached
+    environment:
+      - PSQL_HISTFILE=/root/pg_log/.psql_history
+    ports:
+      - 5432
+    healthcheck:
+      test: pg_isready -U postgres -h 127.0.0.1
+      interval: 5s
+
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    volumes:
+      - redis:/data
+    ports:
+      - 6379
+    healthcheck:
+      test: redis-cli ping
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  postgres:
+  redis:
+  bundle:
+  rails_cache:
+  packs:
