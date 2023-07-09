@@ -2,8 +2,8 @@
 
 set -e
 
-echo "[ bin/ci ] Running unit tests"
-bin/rails test
+echo "[ bin/ci ] # Default: Run all spec files (i.e., those matching spec/**/*_spec.rb)"
+RAILS_ENV=test bundle exec rspec
 
 # echo "[ bin/ci ] Running system tests"
 # bin/rails test:system

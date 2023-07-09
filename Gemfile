@@ -40,9 +40,6 @@ gem "lograge"
 # sidekiq is for background job processing
 gem "sidekiq"
 
-#adaptation of the apivore gem for mini-test 
-gem 'mini-apivore'
-
 #Catch unsafe migrations 
 gem 'strong_migrations'
 
@@ -65,7 +62,6 @@ gem 'pagy', '~> 3.5'
 #high-efficiency, advanced query library for use alongside ActiveRecord.
 #gem 'occams-record'
 
-
 group :development, :test do
   # Use factories for test-specific data that you need
   gem "factory_bot_rails"
@@ -73,8 +69,11 @@ group :development, :test do
   # Use Faker to generate all test data
   gem "faker"
 
-  # This provides better test output
-  gem "minitest-reporters"
+  gem 'rspec-rails'
+
+   # debug
+  gem 'byebug'
+  gem 'pry-rails'
 end
 
 group :development do
@@ -89,5 +88,6 @@ end
 group :test do
   gem "capybara", ">= 2.15"
   gem "selenium-webdriver"
+  gem 'database_cleaner-active_record'
   gem "webdrivers"
 end
