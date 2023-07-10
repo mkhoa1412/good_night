@@ -13,10 +13,10 @@ gem "pg", "~> 1.1"
 gem "puma", "~> 4.1"
 
 #authentication solution for Rails based on Warde
-gem 'devise'
+#gem 'devise'
 
 #authorization library 
-gem 'cancancan'
+#gem 'cancancan'
 
 ## Do Not add the following gems:
 # * turbolinks - we want control over how pages perform and Turbolinks is unobservable
@@ -52,6 +52,9 @@ gem 'pg_query', '>= 0.9.0'
 
 #ultimate pagination
 gem 'pagy', '~> 3.5' 
+
+#rendering JSON:API compliant JSON documents
+gem 'jsonapi-serializer'
 
 #toolkit for handling file attachments 
 #gem "shrine", "~> 3.0"
