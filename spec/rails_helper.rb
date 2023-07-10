@@ -8,6 +8,8 @@ require File.expand_path('../config/environment', __dir__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 require 'database_cleaner/active_record'
+
+Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 begin
   ActiveRecord::Migration.maintain_test_schema!
 rescue ActiveRecord::PendingMigrationError => e
@@ -29,4 +31,12 @@ RSpec.configure do |config|
 
   # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
+
+  # Enable FactoryBot methods
+  config.include FactoryBot::Syntax::Methods
+  
+  # Include Rails URL helpers
+  config.include Rails.application.routes.url_helpers
+
+  config.include ApiHelper, type: :request
 end
