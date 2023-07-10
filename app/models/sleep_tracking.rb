@@ -6,6 +6,10 @@ class SleepTracking < ApplicationRecord
 
   belongs_to :user
 
+  def self.clock_in_operation
+    SleepTracking.where.not(wake_up_time: nil).order(created_at: :desc)
+  end
+
   private
 
   def calculate_sleep_duration
