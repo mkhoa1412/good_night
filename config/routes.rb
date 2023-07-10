@@ -19,6 +19,13 @@ Rails.application.routes.draw do
           get :clock_in_operation
         end
       end
+
+      resources :users, only: [] do
+        member do
+          post 'follow'
+          delete 'unfollow'
+        end
+      end
     end
   end
 end
