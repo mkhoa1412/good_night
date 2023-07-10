@@ -1,11 +1,13 @@
 class User < ApplicationRecord
   has_many :sleep_trackings
-  
+
   has_many :follows, foreign_key: :follower_id, dependent: :destroy
   has_many :followed_users, through: :follows, source: :followed_user
 
   has_many :reverse_follows, foreign_key: :followed_user_id, class_name: 'Follow', dependent: :destroy
   has_many :followers, through: :reverse_follows, source: :follower
+
+  before_create :generate_auth_token
 
   def follow(user)
     followed_users << user
@@ -47,5 +49,9 @@ class User < ApplicationRecord
 
   def sleep_tracking_repository
     @sleep_tracking_repository ||= SleepTrackingRepository.new(self)
+  end
+
+  def generate_auth_token
+    self.auth_token = SecureRandom.hex(16)
   end
 end

@@ -108,7 +108,8 @@ CREATE TABLE public.users (
     id bigint NOT NULL,
     name character varying(50) NOT NULL,
     created_at timestamp(6) with time zone NOT NULL,
-    updated_at timestamp(6) with time zone NOT NULL
+    updated_at timestamp(6) with time zone NOT NULL,
+    auth_token character varying NOT NULL
 );
 
 
@@ -246,6 +247,7 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20230709110413'),
 ('20230709110501'),
-('20230710135003');
+('20230710135003'),
+('20230710144030');
 
 
