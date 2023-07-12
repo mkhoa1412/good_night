@@ -26,6 +26,38 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: follows; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.follows (
+    id bigint NOT NULL,
+    follower_id bigint,
+    followed_user_id bigint,
+    created_at timestamp(6) with time zone NOT NULL,
+    updated_at timestamp(6) with time zone NOT NULL
+);
+
+
+--
+-- Name: follows_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.follows_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: follows_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.follows_id_seq OWNED BY public.follows.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -76,7 +108,8 @@ CREATE TABLE public.users (
     id bigint NOT NULL,
     name character varying(50) NOT NULL,
     created_at timestamp(6) with time zone NOT NULL,
-    updated_at timestamp(6) with time zone NOT NULL
+    updated_at timestamp(6) with time zone NOT NULL,
+    auth_token character varying NOT NULL
 );
 
 
@@ -100,6 +133,13 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: follows id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.follows ALTER COLUMN id SET DEFAULT nextval('public.follows_id_seq'::regclass);
+
+
+--
 -- Name: sleep_trackings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -119,6 +159,14 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: follows follows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.follows
+    ADD CONSTRAINT follows_pkey PRIMARY KEY (id);
 
 
 --
@@ -146,10 +194,40 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: index_follows_on_followed_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_follows_on_followed_user_id ON public.follows USING btree (followed_user_id);
+
+
+--
+-- Name: index_follows_on_follower_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_follows_on_follower_id ON public.follows USING btree (follower_id);
+
+
+--
 -- Name: index_sleep_trackings_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_sleep_trackings_on_user_id ON public.sleep_trackings USING btree (user_id);
+
+
+--
+-- Name: follows fk_rails_532b19bbcc; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.follows
+    ADD CONSTRAINT fk_rails_532b19bbcc FOREIGN KEY (followed_user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: follows fk_rails_622d34a301; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.follows
+    ADD CONSTRAINT fk_rails_622d34a301 FOREIGN KEY (follower_id) REFERENCES public.users(id);
 
 
 --
@@ -168,6 +246,8 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20230709110413'),
-('20230709110501');
+('20230709110501'),
+('20230710135003'),
+('20230710144030');
 
 

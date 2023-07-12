@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Api::V1::SleepTrackingsController', type: :request do
+RSpec.describe 'clocked-in times api', type: :request do
   describe 'GET #clock_in_operation' do
     let!(:sleep_trackings) {create_list(:sleep_tracking, 20)}
 
