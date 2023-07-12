@@ -10,4 +10,25 @@ Rails.application.routes.draw do
     end
   end
   mount Sidekiq::Web => "/sidekiq"
-  mount PgHero::Engine, at: "pghero"end
+  mount PgHero::Engine, at: "pghero"
+
+  namespace :api do
+    namespace :v1 do
+      resources :sleep_trackings, only: [] do
+        collection do
+          get :clock_in_operation
+        end
+      end
+
+      resources :users, only: [] do
+        collection do
+          get :friend_sleep_records
+        end
+        member do
+          post :follow
+          delete :unfollow
+        end
+      end
+    end
+  end
+end
