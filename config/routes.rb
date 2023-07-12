@@ -21,9 +21,12 @@ Rails.application.routes.draw do
       end
 
       resources :users, only: [] do
+        collection do
+          get :friend_sleep_records
+        end
         member do
-          post 'follow'
-          delete 'unfollow'
+          post :follow
+          delete :unfollow
         end
       end
     end

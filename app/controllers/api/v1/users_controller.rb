@@ -18,6 +18,12 @@ module Api
           message: "You have unfollowed #{user.name}" 
         }, status: :ok
       end
+
+      def friend_sleep_records
+        sleep_repo = SleepTrackingRepository.new(@current_user)
+        sleep_records = sleep_repo.friend_sleep_records
+        render json: sleep_records, status: :ok
+      end
     end
   end
 end
